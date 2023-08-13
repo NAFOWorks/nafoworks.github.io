@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NAFOWorks</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  </head>
+  <body>
+    <nav class="navbar" style="background-color: #000; background-image: url(/img/banner.jpg); background-position: center; background-repeat: no-repeat; background-size: contain;">
+      <div class="container-sm" style="max-width:640px;">
+        <a class="navbar-brand" href="#">
+          <img src="/img/profile.jpg" class="rounded-circle" style="position:relative; top: 64px; border: solid 3px #dedbda;" alt="Saint Snowday: Patron of Saints" width="128" height="128">
+        </a>
+      </div>
+    </nav>
+    <div class="container-sm" style="max-width:640px;">
+      <div class="container-fluid mt-5">
+        <canvas id="statistics"></canvas>
+      </div>
+      <div class="container-fluid mt-5">
+        <form class="d-flex" role="filter">
+          <input id="filter" class="form-control me-2" type="filter" placeholder="Filter" aria-label="Filter">
+        </form>
+      </div>
+
+      <style>
+        .locked {
+          background-color: #fda;
+        }
+        .suspended {
+          background-color: #dfd;
+        }
+      </style>
+      <div id="reports-feed" class="container">
+      </div>
+    </div>
+    <div class="container-fluid mt-5 p-0">
+      <div id="footer" class="bg-with" style="height:120px;">
+        <p class="text-center p-5 text-secondary">Copyright © 2023 NAFOWORKS</p>
+      </div>
+    </div>
+
+    <script async src="https://cdn.jsdelivr.net/npm/es-module-shims@1/dist/es-module-shims.min.js" crossorigin="anonymous"></script>
+    <script type="importmap">
+    {
+      "imports": {
+        "bootstrap": "https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.esm.min.js",
+        "chart": "https://cdn.jsdelivr.net/npm/chart.js@4.3.3/+esm",
+        "@popperjs/core": "https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/esm/popper.min.js",
+        "javascript-time-ago": "https://cdn.jsdelivr.net/npm/javascript-time-ago@2.5.9/+esm",
+        "javascript-time-ago/locale/en": "https://cdn.jsdelivr.net/npm/javascript-time-ago@2.5.9/locale/en/+esm"
+      }
+    }
+    </script>
+
+    <script type="module">
+
+      import 'https://cdn.jsdelivr.net/npm/chart.js@4.3.3/dist/chart.umd.min.js'
+
+      Chart.defaults.scales.linear.min = 0
+
+      let render_statistics = function (data) {
+        console.log(data)
+        let config = {
+          type: 'line',
+          data: {
+            labels: data.map(row => row.year),
+            datasets: [{
+              label: 'Suspensions',
+              data: data.map(row => row.sus),
+              borderColor: '#dfd'
+            }, {
+              label: 'Locks',
+              data: data.map(row => row.loc),
+              borderColor: '#fda'
+            }]
+          }
+        }
+        new Chart(document.getElementById('statistics'), config)
+      }
+      fetch('/data/statistics.json').then(response => response.json()).then(render_statistics)
+
+    </script>
+
+    <script type="module">
+
+      import * as bootstrap from 'bootstrap'
+      import TimeAgo from 'javascript-time-ago'
+      // English.
+      import en from 'javascript-time-ago/locale/en'
+
+      TimeAgo.addDefaultLocale(en)
+
+      // Create formatter (English).
+      const timeAgo = new TimeAgo('en-US')
+
+      var reports
+
+      let filter = document.getElementById('filter')
+      let filter_changed = function (e) {
+        console.log(e.target.value)
+        let value = e.target.value
+        reports.forEach((item, index) => {
+          let element = document.getElementById(`report-${ index }`)
+          if (item.h.toLowerCase().includes(value.toLowerCase())) {
+            element.classList.remove('d-none')
+          } else {
+            element.classList.add('d-none')
+          }
+        })
+      }
+      filter.addEventListener('input', filter_changed)
+
+      let reports_feed = document.getElementById('reports-feed')
+      let render_reports = data => {
+        data.forEach((item, index) => {
+          if (item.t == 'sus') {
+            item.t = 'suspended'
+            item.icon = 'emoji-dizzy'
+          } else if (item.t == 'loc') {
+            item.t = 'locked'
+            item.icon = 'lock-fill'
+          }
+          reports_feed.innerHTML += `
+          <div id="report-${ index }" class="mt-4 card ${ item.t }">
+            <div class="card-body">
+              <i class="bi bi-${item.icon }"></i> We ${ item.t } @${ item.h }'s account.
+              ${ timeAgo.format(new Date(item.d), 'twitter') }
+            </div>
+          </div>
+          `
+        })
+        reports = data
+      }
+      fetch('/data/reports.json').then(response => response.json()).then(render_reports)
+
+    </script>
+
+
+  </body>
+</html>
