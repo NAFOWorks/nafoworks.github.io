@@ -8,15 +8,15 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   </head>
   <body>
-    <nav class="navbar" style="background-color: #000; background-image: url(/img/banner.jpg); background-position: center; background-repeat: no-repeat; background-size: contain;">
+    <nav class="navbar shadow" style="background-color: #000; background-image: url(/img/banner.jpg); background-position: center; background-repeat: no-repeat; background-size: contain;">
       <div class="container-sm" style="max-width:640px;">
         <a class="navbar-brand" href="#">
-          <img src="/img/profile.jpg" class="rounded-circle" style="position:relative; top: 64px; border: solid 3px #dedbda;" alt="Saint Snowday: Patron of Saints" width="128" height="128">
+          <img src="/img/profile.jpg" class="rounded-circle shadow" style="position:relative; top: 22px; border: solid 3px #dedbda;" alt="Saint Snowday: Patron of Saints" width="173" height="173">
         </a>
       </div>
     </nav>
-    <div class="container-sm" style="max-width:640px;">
-      <div class="container-fluid mt-5">
+    <div class="container-sm pt-1" style="max-width:640px;">
+      <div class="container-fluid mt-5 border rounded px-2 py-5 shadow">
         <canvas id="statistics"></canvas>
       </div>
       <div class="container-fluid mt-5">
@@ -24,15 +24,6 @@
           <input id="filter" class="form-control me-2" type="filter" placeholder="Filter" aria-label="Filter">
         </form>
       </div>
-
-      <style>
-        .locked {
-          background-color: #fda;
-        }
-        .suspended {
-          background-color: #dfd;
-        }
-      </style>
       <div id="reports-feed" class="container">
       </div>
     </div>
@@ -65,16 +56,49 @@
         console.log(data)
         let config = {
           type: 'line',
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                labels: {
+                  usePointStyle: true
+                }
+              }
+            },
+            scales: {
+              x: {
+                title: {
+                  display: true,
+                  text: 'Date'
+                }
+              },
+              y: {
+                stacked: true,
+                title: {
+                  display: true,
+                  text: 'Accounts'
+                }
+              }
+            }
+          },
           data: {
             labels: data.map(row => row.year),
             datasets: [{
               label: 'Suspensions',
               data: data.map(row => row.sus),
-              borderColor: '#dfd'
+              borderColor: '#cec',
+              backgroundColor: 'rgba(204,238,204,0.5)',
+              fill: true,
+              radius: 4,
+              borderWidth: 4
             }, {
               label: 'Locks',
               data: data.map(row => row.loc),
-              borderColor: '#fda'
+              borderColor: '#fda',
+              backgroundColor: 'rgba(255,221,170,0.2)',
+              fill: true,
+              radius: 4,
+              borderWidth: 4
             }]
           }
         }
@@ -83,7 +107,14 @@
       fetch('/data/statistics.json').then(response => response.json()).then(render_statistics)
 
     </script>
-
+    <style>
+      .locked {
+        background-color: #ffddaa;
+      }
+      .suspended {
+        background-color: #aaffaa;
+      }
+    </style>
     <script type="module">
 
       import * as bootstrap from 'bootstrap'
@@ -119,15 +150,22 @@
           if (item.t == 'sus') {
             item.t = 'suspended'
             item.icon = 'emoji-dizzy'
+            item.title = 'Suspension'
           } else if (item.t == 'loc') {
             item.t = 'locked'
             item.icon = 'lock-fill'
+            item.title = 'Locked'
           }
           reports_feed.innerHTML += `
-          <div id="report-${ index }" class="mt-4 card ${ item.t }">
+          <div id="report-${ index }" class="mt-4 card">
             <div class="card-body">
-              <i class="bi bi-${item.icon }"></i> We ${ item.t } @${ item.h }'s account.
-              ${ timeAgo.format(new Date(item.d), 'twitter') }
+              <div class="card-title btn rounded ${ item.t }">
+                <i class="bi bi-${item.icon }"></i> ${ item.title }
+              </div>
+              <p class="card-text">We ${ item.t } @${ item.h }'s account.</p>
+              <span class="small text-secondary">
+                ${ timeAgo.format(new Date(item.d)) }
+              </span>
             </div>
           </div>
           `
