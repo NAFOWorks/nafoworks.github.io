@@ -6,25 +6,59 @@
     <title>NAFOWorks</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <style>
+      .locked {
+        background-color: #ffddaa;
+      }
+      .suspended {
+        background-color: #aaffaa;
+      }
+    </style>
   </head>
   <body>
     <nav class="navbar shadow" style="background-color: #000; background-image: url(/img/banner.jpg); background-position: center; background-repeat: no-repeat; background-size: contain;">
       <div class="container-sm" style="max-width:640px;">
         <a class="navbar-brand" href="#">
-          <img src="/img/profile.jpg" class="rounded-circle shadow" style="position:relative; top: 22px; border: solid 3px #dedbda;" alt="Saint Snowday: Patron of Saints" width="173" height="173">
+          <img src="/img/profile.jpg" class="rounded-circle shadow" style="border: solid 3px #dedbda;" alt="Saint Snowday: Patron of Saints" width="73" height="73">
         </a>
       </div>
     </nav>
-    <div class="container-sm pt-1" style="max-width:640px;">
-      <div class="container-fluid mt-5 border rounded px-2 py-5 shadow">
-        <canvas id="statistics"></canvas>
+    <div class="container-sm pt-4" style="max-width:640px;">
+      <div class="card">
+        <div class="row g-0">
+          <div class="col-3">
+            <img src="/img/profile.jpg" class="img-fluid rounded-circle m-3" alt="Saint Snowday's profile picture" style="max-height:128px;">
+          </div>
+          <div class="col-9">
+            <div class="card-body">
+              <h5 class="card-title">
+                Meet Saint Snowday
+              </h5>
+              <p class="card-text">
+                Read the story behind NAFOWorks.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="container-fluid mt-5">
-        <form class="d-flex" role="filter">
-          <input id="filter" class="form-control me-2" type="filter" placeholder="Filter" aria-label="Filter">
+      <div class="card my-4 px-2">
+        <div class="card-body">
+          <h5 class="card-title">
+            Latest results
+          </h5>
+          <canvas id="statistics"></canvas>
+        </div>
+      </div>
+    </div>
+    <div id="filter-bar" class="navbar sticky-top bg-white">
+      <div class="container-fluid px-3" style="max-width:640px;">
+        <form class="d-flex w-100" role="filter">
+          <input id="filter" class="form-control" type="filter" placeholder="Filter" aria-label="Filter">
         </form>
       </div>
-      <div id="reports-feed" class="container">
+    </div>
+    <div class="container-sm pt-1" style="max-width:640px;">
+      <div id="reports-feed" class="container-fluid px-2">
       </div>
     </div>
     <div class="container-fluid mt-5 p-0">
@@ -45,137 +79,6 @@
       }
     }
     </script>
-
-    <script type="module">
-
-      import 'https://cdn.jsdelivr.net/npm/chart.js@4.3.3/dist/chart.umd.min.js'
-
-      Chart.defaults.scales.linear.min = 0
-
-      let render_statistics = function (data) {
-        console.log(data)
-        let config = {
-          type: 'line',
-          options: {
-            responsive: true,
-            plugins: {
-              legend: {
-                labels: {
-                  usePointStyle: true
-                }
-              }
-            },
-            scales: {
-              x: {
-                title: {
-                  display: true,
-                  text: 'Date'
-                }
-              },
-              y: {
-                stacked: true,
-                title: {
-                  display: true,
-                  text: 'Accounts'
-                }
-              }
-            }
-          },
-          data: {
-            labels: data.map(row => row.year),
-            datasets: [{
-              label: 'Suspensions',
-              data: data.map(row => row.sus),
-              borderColor: '#cec',
-              backgroundColor: 'rgba(204,238,204,0.5)',
-              fill: true,
-              radius: 4,
-              borderWidth: 4
-            }, {
-              label: 'Locks',
-              data: data.map(row => row.loc),
-              borderColor: '#fda',
-              backgroundColor: 'rgba(255,221,170,0.2)',
-              fill: true,
-              radius: 4,
-              borderWidth: 4
-            }]
-          }
-        }
-        new Chart(document.getElementById('statistics'), config)
-      }
-      fetch('/data/statistics.json').then(response => response.json()).then(render_statistics)
-
-    </script>
-    <style>
-      .locked {
-        background-color: #ffddaa;
-      }
-      .suspended {
-        background-color: #aaffaa;
-      }
-    </style>
-    <script type="module">
-
-      import * as bootstrap from 'bootstrap'
-      import TimeAgo from 'javascript-time-ago'
-      // English.
-      import en from 'javascript-time-ago/locale/en'
-
-      TimeAgo.addDefaultLocale(en)
-
-      // Create formatter (English).
-      const timeAgo = new TimeAgo('en-US')
-
-      var reports
-
-      let filter = document.getElementById('filter')
-      let filter_changed = function (e) {
-        console.log(e.target.value)
-        let value = e.target.value
-        reports.forEach((item, index) => {
-          let element = document.getElementById(`report-${ index }`)
-          if (item.h.toLowerCase().includes(value.toLowerCase())) {
-            element.classList.remove('d-none')
-          } else {
-            element.classList.add('d-none')
-          }
-        })
-      }
-      filter.addEventListener('input', filter_changed)
-
-      let reports_feed = document.getElementById('reports-feed')
-      let render_reports = data => {
-        data.forEach((item, index) => {
-          if (item.t == 'sus') {
-            item.t = 'suspended'
-            item.icon = 'emoji-dizzy'
-            item.title = 'Suspension'
-          } else if (item.t == 'loc') {
-            item.t = 'locked'
-            item.icon = 'lock-fill'
-            item.title = 'Locked'
-          }
-          reports_feed.innerHTML += `
-          <div id="report-${ index }" class="mt-4 card">
-            <div class="card-body">
-              <div class="card-title btn rounded ${ item.t }">
-                <i class="bi bi-${item.icon }"></i> ${ item.title }
-              </div>
-              <p class="card-text">We ${ item.t } @${ item.h }'s account.</p>
-              <span class="small text-secondary">
-                ${ timeAgo.format(new Date(item.d)) }
-              </span>
-            </div>
-          </div>
-          `
-        })
-        reports = data
-      }
-      fetch('/data/reports.json').then(response => response.json()).then(render_reports)
-
-    </script>
-
-
+    <script type="module" src="/js/main_module.js"/>
   </body>
 </html>
