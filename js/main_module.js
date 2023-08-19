@@ -108,7 +108,7 @@ let render_reports = data => {
         <div class="small text-tertiary">
           ${ timeAgo.format(new Date(item.d)) }
         </div>
-        <p class="card-text pt-3 pb-1">We ${ item.t } @${ item.h }'s account.</p>
+        <p class="card-text pt-3 pb-1">@${ item.h }</p>
       </div>
     </div>
     `
