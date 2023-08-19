@@ -93,11 +93,9 @@ let reports_feed = document.getElementById('reports-feed')
 let render_reports = data => {
   data.forEach((item, index) => {
     if (item.t == 'sus') {
-      item.t = 'suspended'
       item.icon = 'emoji-dizzy'
       item.title = 'Suspension'
     } else if (item.t == 'loc') {
-      item.t = 'locked'
       item.icon = 'lock-fill'
       item.title = 'Locked'
     }
