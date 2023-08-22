@@ -110,6 +110,9 @@ let render_card = data => {
 let render_reports = data => {
   let new_reports = []
   let card_index = 0
+  data.sort(function(a,b){
+    return new Date(b.date) - new Date(a.date)
+  })
   data.forEach((item, index) => {
     let item_data = {}
     item_data.d = item.date
