@@ -14,7 +14,6 @@ import 'https://cdn.jsdelivr.net/npm/chart.js@4.3.3/dist/chart.umd.min.js'
 Chart.defaults.scales.linear.min = 0
 
 let render_statistics = function (data) {
-  console.log(data)
   let config = {
     type: 'line',
     options: {
@@ -43,7 +42,7 @@ let render_statistics = function (data) {
       }
     },
     data: {
-      labels: data.map(row => row.year),
+      labels: data.map(row => row.date),
       datasets: [{
         label: 'Suspensions',
         data: data.map(row => row.sus),
@@ -65,7 +64,6 @@ let render_statistics = function (data) {
   }
   new Chart(document.getElementById('statistics'), config)
 }
-fetch('/data/statistics.json').then(response => response.json()).then(render_statistics)
 
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
@@ -109,6 +107,7 @@ let render_card = data => {
 }
 let render_reports = data => {
   let new_reports = []
+  let statistics = []
   let card_index = 0
   data.sort(function(a,b){
     return new Date(b.date) - new Date(a.date)
@@ -134,7 +133,16 @@ let render_reports = data => {
       reports_feed.innerHTML += render_card(item_data)
       new_reports.push({...item_data})
     })
+    statistics.push({
+      date: item.date,
+      sus: item.suspensions.length,
+      loc: item.locks.length
+    })
   })
   reports = new_reports
+  statistics.sort(function(a,b){
+    return new Date(a.date) - new Date(b.date)
+  })
+  render_statistics(statistics)
 }
 fetch('/data/reports.json').then(response => response.json()).then(render_reports)
