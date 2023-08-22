@@ -1,69 +1,41 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-bs-theme="nafo" class="p-0 m-0">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>NAFOWorks</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <style>
-      .loc {
-        background-color: #ffddaa;
-      }
-      .sus {
-        background-color: #aaffaa;
-      }
-    </style>
+    <link rel="stylesheet" href="/css/main.css"/>
   </head>
-  <body>
-    <nav class="navbar shadow" style="background-color: #000; background-image: url(/img/banner.jpg); background-position: center; background-repeat: no-repeat; background-size: contain;">
-      <div class="container-sm" style="max-width:640px;">
-        <a class="navbar-brand" href="#">
-          <img src="/img/profile.jpg" class="rounded-circle shadow" style="border: solid 3px #dedbda;" alt="Saint Snowday: Patron of Saints" width="73" height="73">
-        </a>
-      </div>
-    </nav>
-    <div class="container-sm pt-4" style="max-width:640px;">
-      <div class="card">
-        <div class="row g-0">
-          <div class="col-3">
-            <img src="/img/profile.jpg" class="img-fluid rounded-circle m-3" alt="Saint Snowday's profile picture" style="max-height:128px;">
-          </div>
-          <div class="col-9">
-            <div class="card-body">
-              <h5 class="card-title">
-                Meet Saint Snowday
-              </h5>
-              <p class="card-text">
-                Read the story behind NAFOWorks.
-              </p>
-            </div>
+  <body class="p-0 m-0">
+    <div class="main container-sm border-x px-0 pb-0 pt-2" style="max-width:640px;">
+      <nav class="navbar">
+        <h2 class="brand mx-3">Canine Intelligence Agency</h2>
+      </nav>
+      <div class="container-fluid">
+        <div class="card my-4">
+          <div class="card-body">
+            <h5 class="card-title">
+              Latest results
+            </h5>
+            <canvas id="statistics"></canvas>
           </div>
         </div>
       </div>
-      <div class="card my-4 px-2">
-        <div class="card-body">
-          <h5 class="card-title">
-            Latest results
-          </h5>
-          <canvas id="statistics"></canvas>
+      <div id="filter-bar" class="navbar sticky-top">
+        <div class="container-fluid">
+          <form class="d-flex w-100" role="filter">
+            <input id="filter" class="form-control" type="filter" placeholder="Search by Twitter handle" aria-label="Filter">
+          </form>
         </div>
       </div>
-    </div>
-    <div id="filter-bar" class="navbar sticky-top bg-white">
-      <div class="container-fluid px-3" style="max-width:640px;">
-        <form class="d-flex w-100" role="filter">
-          <input id="filter" class="form-control" type="filter" placeholder="Filter" aria-label="Filter">
-        </form>
+      <div id="reports-feed" class="container-fluid">
       </div>
-    </div>
-    <div class="container-sm pt-1" style="max-width:640px;">
-      <div id="reports-feed" class="container-fluid px-2">
-      </div>
-    </div>
-    <div class="container-fluid mt-5 p-0">
-      <div id="footer" class="bg-with" style="height:120px;">
-        <p class="text-center p-5 text-secondary">Copyright © 2023 NAFOWORKS</p>
+      <div class="container-fluid mt-5">
+        <div id="footer" class="bg-with" style="height:120px;">
+          <p class="text-center p-5 text-secondary">Copyright © 2023 NAFOWORKS</p>
+        </div>
       </div>
     </div>
 

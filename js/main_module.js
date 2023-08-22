@@ -47,19 +47,19 @@ let render_statistics = function (data) {
       datasets: [{
         label: 'Suspensions',
         data: data.map(row => row.sus),
-        borderColor: '#cec',
-        backgroundColor: 'rgba(204,238,204,0.5)',
+        borderColor: '#f00',
+        backgroundColor: 'rgba(255,0,0,0.1)',
         fill: true,
-        radius: 4,
-        borderWidth: 4
+        radius: 2,
+        borderWidth: 2
       }, {
         label: 'Locks',
         data: data.map(row => row.loc),
-        borderColor: '#fda',
-        backgroundColor: 'rgba(255,221,170,0.2)',
+        borderColor: '#fc0',
+        backgroundColor: 'rgba(255,230,0,0.1)',
         fill: true,
-        radius: 4,
-        borderWidth: 4
+        radius: 2,
+        borderWidth: 2
       }]
     }
   }
@@ -93,22 +93,26 @@ let reports_feed = document.getElementById('reports-feed')
 let render_reports = data => {
   data.forEach((item, index) => {
     if (item.t == 'sus') {
+      item.t = 'danger'
       item.icon = 'emoji-dizzy'
       item.title = 'Suspension'
     } else if (item.t == 'loc') {
+      item.t = 'warning'
       item.icon = 'lock-fill'
       item.title = 'Locked'
     }
     reports_feed.innerHTML += `
-    <div id="report-${ index }" class="mt-3 card pt-2 pb-3">
+    <div id="report-${ index }" class="mt-3 card pb-1">
       <div class="card-body">
-        <div class="card-title btn rounded ${ item.t }">
-          <i class="bi bi-${item.icon }"></i> ${ item.title }
+        <span class="small text-tertiary">${ new Date(item.d) }</span>
+        <div class="card-title d-flex justify-content-between m-0">
+          <p class="card-text">@${ item.h }</p>
+          <span class="text-${ item.t }">${ item.title }&nbsp;<i class="bi bi-${item.icon }"></i></span>
         </div>
-        <div class="small text-tertiary">
-          ${ timeAgo.format(new Date(item.d)) }
-        </div>
-        <p class="card-text pt-3 pb-1">@${ item.h }</p>
+      </div>
+      <div class="card-footer">
+        <a target="_blank" class="btn btn-outline-primary" href="https://web.archive.org/web/*/https://twitter.com/${ item.h }*" role="button"><i class="bi bi-box-arrow-right"></i>&nbsp;archive.org</a>
+
       </div>
     </div>
     `
