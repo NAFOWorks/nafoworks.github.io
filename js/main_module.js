@@ -42,7 +42,7 @@ let render_statistics = function (data) {
       }
     },
     data: {
-      labels: data.map(row => row.date),
+      labels: data.map(row => row.date.toDateString()),
       datasets: [{
         label: 'Suspensions',
         data: data.map(row => row.sus),
@@ -65,10 +65,10 @@ let render_statistics = function (data) {
   new Chart(document.getElementById('statistics'), config)
 }
 
-import TimeAgo from 'javascript-time-ago'
-import en from 'javascript-time-ago/locale/en'
-TimeAgo.addDefaultLocale(en)
-const timeAgo = new TimeAgo('en-US')
+//import TimeAgo from 'javascript-time-ago'
+//import en from 'javascript-time-ago/locale/en'
+//TimeAgo.addDefaultLocale(en)
+//const timeAgo = new TimeAgo('en-US')
 
 var reports
 
@@ -109,8 +109,11 @@ let render_reports = data => {
   let new_reports = []
   let statistics = []
   let card_index = 0
+  data.forEach((item, index) => {
+    item.date = new Date(item.date)
+  })
   data.sort(function(a,b){
-    return new Date(b.date) - new Date(a.date)
+    return b.date - a.date
   })
   data.forEach((item, index) => {
     let item_data = {}
@@ -141,7 +144,7 @@ let render_reports = data => {
   })
   reports = new_reports
   statistics.sort(function(a,b){
-    return new Date(a.date) - new Date(b.date)
+    return a.date - b.date
   })
   render_statistics(statistics)
 }
