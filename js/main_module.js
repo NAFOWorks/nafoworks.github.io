@@ -90,33 +90,48 @@ let filter_changed = function (e) {
 filter.addEventListener('input', filter_changed)
 
 let reports_feed = document.getElementById('reports-feed')
-let render_reports = data => {
-  data.forEach((item, index) => {
-    if (item.t == 'sus') {
-      item.t = 'danger'
-      item.icon = 'emoji-dizzy'
-      item.title = 'Suspension'
-    } else if (item.t == 'loc') {
-      item.t = 'warning'
-      item.icon = 'lock-fill'
-      item.title = 'Locked'
-    }
-    reports_feed.innerHTML += `
-    <div id="report-${ index }" class="mt-3 card pb-1">
-      <div class="card-body">
-        <span class="small text-tertiary">${ new Date(item.d) }</span>
-        <div class="card-title d-flex justify-content-between m-0">
-          <p class="card-text">@${ item.h }</p>
-          <span class="text-${ item.t }">${ item.title }&nbsp;<i class="bi bi-${item.icon }"></i></span>
-        </div>
-      </div>
-      <div class="card-footer">
-        <a target="_blank" class="btn btn-outline-primary" href="https://web.archive.org/web/*/https://twitter.com/${ item.h }*" role="button"><i class="bi bi-box-arrow-right"></i>&nbsp;archive.org</a>
-
+let render_card = data => {
+  return `
+  <div id="report-${ data.index }" class="mt-3 card pb-1">
+    <div class="card-body">
+      <span class="small text-tertiary">${ new Date(data.d) }</span>
+      <div class="card-title d-flex justify-content-between m-0">
+        <p class="card-text">@${ data.h }</p>
+        <span class="text-${ data.t }">${ data.title }&nbsp;<i class="bi bi-${data.icon }"></i></span>
       </div>
     </div>
-    `
+    <div class="card-footer">
+      <a target="_blank" class="btn btn-outline-primary" href="https://twitter.com/${ data.h }" role="button"><i class="bi bi-box-arrow-right"></i>&nbsp;twitter</a>
+      <a target="_blank" class="btn btn-outline-primary" href="https://web.archive.org/web/*/https://twitter.com/${ data.h }*" role="button"><i class="bi bi-box-arrow-right"></i>&nbsp;archive.org</a>
+    </div>
+  </div>
+  `
+}
+let render_reports = data => {
+  let new_reports = []
+  let card_index = 0
+  data.forEach((item, index) => {
+    let item_data = {}
+    item_data.d = item.date
+    item.suspensions.forEach((suspension) => {
+      item_data.index = card_index++
+      item_data.h = suspension
+      item_data.t = 'danger'
+      item_data.icon = 'emoji-dizzy'
+      item_data.title = 'Suspension'
+      reports_feed.innerHTML += render_card(item_data)
+      new_reports.push({ ...item_data})
+    })
+    item.locks.forEach((lock) => {
+      item_data.index = card_index++
+      item_data.h = lock
+      item_data.t = 'warning'
+      item_data.icon = 'lock-fill'
+      item_data.title = 'Locked'
+      reports_feed.innerHTML += render_card(item_data)
+      new_reports.push({...item_data})
+    })
   })
-  reports = data
+  reports = new_reports
 }
 fetch('/data/reports.json').then(response => response.json()).then(render_reports)

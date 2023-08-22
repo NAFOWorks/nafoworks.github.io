@@ -1,13 +1,19 @@
 [
-{"d": "2023/05/01", "t":"sus", "h": "rusinformatsia"},
-{"d": "2023/05/01", "t":"sus", "h": "Bikramnath70"},
-{"d": "2023/05/01", "t":"sus", "h": "GunToaster"},
-{"d": "2023/05/01", "t":"loc", "h": "Kaseyswife4life"},
-{"d": "2023/05/01", "t":"loc", "h": "JorgeLT18"},
-{"d": "2023/05/01", "t":"loc", "h": "MilitarisCath"},
-{"d": "2023/05/01", "t":"loc", "h": "sukaajo"},
-{"d": "2023/05/01", "t":"loc", "h": "AdonisPaulAP"},
-{"d": "2023/05/01", "t":"loc", "h": "Bigrazzmatazz"},
-{"d": "2023/05/01", "t":"loc", "h": "bott_2"},
-{"d": "2023/05/01", "t":"loc", "h": "Bill_Weimer"}
+  { "date": "2023/05/01",
+    "suspensions": [
+      "rusinformatsia",
+      "Bikramnath70",
+      "GunToaster"
+    ],
+    "locks": [
+      "Kaseyswife4life",
+      "JorgeLT18",
+      "MilitarisCath",
+      "sukaajo",
+      "AdonisPaulAP",
+      "Bigrazzmatazz",
+      "bott_2",
+      "Bill_Weimer"
+    ]
+  }
 ]

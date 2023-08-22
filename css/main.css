@@ -3,7 +3,7 @@
 [data-bs-theme="nafo"] {
   --bs-body-color: rgb(99, 219, 255);
   --bs-secondary-color: #69d;
-  --bs-body-bg: rgb(2,22,87);
+  --bs-body-bg: rgb(8, 6, 59);
   --bs-border-color: #69d;
   --border-color-translucent: rgba(255,0,0,1);
 }
@@ -18,8 +18,8 @@ body {
   opacity: 0.6;
 }
 
-#filter_bar {
-  background-color: #112;
+#filter-bar {
+  background-color: rgba(0, 0, 255, 0.8);
 }
 
 .border-x {
@@ -29,11 +29,12 @@ body {
 
 .card {
   border:1px solid;
+  border-radius: 0;
   background-color: rgba(100,100,255,0.2);
 }
 
 .main {
-  background-color: rgba(0, 0, 255, 0.5);
+  background-color: rgba(0, 0, 255, 0.8);
 }
 
 .brand {
